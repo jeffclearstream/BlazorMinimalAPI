@@ -31,9 +31,6 @@ public static class PageEndpoints
         app.MapGet("/contacts/{id:int}/delete", new ContactHandler().Delete)
             .WithName("Contacts.Delete");
 
-		app.MapGet("/random-number", new HomeHandler().RandomNumber)
-			.WithName("Home.RandomNumber");
-
 		return app;
     }
 }

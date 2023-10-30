@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Components.Endpoints;
 using Microsoft.AspNetCore.Mvc;
 using Riok.Mapperly.Abstractions;
 using System.ComponentModel.DataAnnotations;
+using BlazorMinimalApis.Endpoints.Pages.Contacts;
 
 namespace BlazorMinimalApis.Endpoints.Pages.Contacts;
 
 public class ContactHandler : PageHandler
 {
+
     public IResult List(HttpContext context)
     {
         var model = new ContactModel()

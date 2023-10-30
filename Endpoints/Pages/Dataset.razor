@@ -1,0 +1,9 @@
+﻿@inherits XComponentBase
+@code {
+    [Parameter] public int Num { get; set; }
+}
+
+<div class="bg-white p-4 shadow-md">
+    <h3 class="text-lg font-medium mb-2">Dataset #@Num</h3>
+    <p class="text-sm text-gray-600">This is Dataset #@Num. More to come soon!</p>
+</div>

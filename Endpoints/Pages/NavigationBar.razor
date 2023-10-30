@@ -1,0 +1,15 @@
+﻿@inherits XComponentBase
+@code {
+
+}
+<div class="bg-blue-500 p-4 text-white">
+    <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-semibold">My Dataset App</h1>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="@Link.GetPathByName("Signup")" class="text-white hover:text-blue-300">Signup</a></li>
+                <li><a href="@Link.GetPathByName("Login")" class="text-white hover:text-blue-300">Login</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
