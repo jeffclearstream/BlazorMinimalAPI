@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inherits XComponentBase
+@inject NavigationManager NavigationManager
+@inject SignInManager<IdentityUser> SignInManager
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    private async Task HandleLogin()
+    {
+        var result = await SignInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            // Handle failed login attempt
+        }
+    }
+
+    private class LoginModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+}
+
+<h3>Login</h3>
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <InputText id="email" @bind-Value="loginModel.Email" placeholder="Email" />
+    <InputText type="password" @bind-Value="loginModel.Password" placeholder="Password" />
+    <button type="submit">Login</button>
+</EditForm>

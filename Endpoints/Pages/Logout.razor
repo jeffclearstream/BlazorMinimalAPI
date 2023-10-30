@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inherits XComponentBase
+@inject SignInManager<IdentityUser> SignInManager
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await SignInManager.SignOutAsync();
+        NavigationManager.NavigateTo("/");
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using BlazorMinimalApis.Endpoints.Pages.Contacts;
 using BlazorMinimalApis.Endpoints.Pages.Home;
+using BlazorMinimalApis.Endpoints.Pages;
 
 namespace BlazorMinimalApis.Endpoints;
 
@@ -30,6 +31,11 @@ public static class PageEndpoints
 
         app.MapGet("/contacts/{id:int}/delete", new ContactHandler().Delete)
             .WithName("Contacts.Delete");
+
+        app.MapGet("dataset/{id:int}", new DatasetHandler().Edit)
+            .WithName("Dataset.View");
+
+        app.MapGet("/login", new DatasetHandler().Login);
 
 		return app;
     }

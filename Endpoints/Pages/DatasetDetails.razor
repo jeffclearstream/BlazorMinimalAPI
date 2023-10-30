@@ -1,0 +1,42 @@
+﻿@inherits XComponentBase
+@code {
+    [Parameter] public string DatasetId { get; set; }
+
+    // This is a placeholder. In a real application, you'd fetch this data from a database or API.
+    private string datasetName = "Sample Dataset";
+    private string datasetDescription = "This is a sample description of the dataset.";
+    private List<string[]> datasetData = new List<string[]>
+    {
+        new string[] { "Header1", "Header2" },  // Table headers
+        new string[] { "Data1", "Info1" },      // Data rows...
+        new string[] { "Data2", "Info2" },
+        // ... add more data rows as needed
+    };
+}
+
+<section class="p-8">
+    <h2 class="text-2xl font-semibold mb-4">@datasetName</h2>
+    <p class="mb-8">@datasetDescription</p>
+
+    <table class="min-w-full bg-white border rounded-md overflow-hidden">
+        <thead class="bg-gray-200">
+            <tr>
+                @foreach (var header in datasetData[0])
+                {
+                    <th class="px-4 py-2">@header</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 1; i < datasetData.Count; i++)
+            {
+                <tr class="even:bg-gray-100">
+                    @foreach (var cell in datasetData[i])
+                    {
+                        <td class="border px-4 py-2">@cell</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

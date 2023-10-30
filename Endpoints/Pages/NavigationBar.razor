@@ -1,14 +1,29 @@
-﻿@inherits XComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inherits XComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @code {
+    private bool isAuthenticated;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity.IsAuthenticated;
+    }
 }
 <div class="bg-blue-500 p-4 text-white">
     <div class="container mx-auto flex justify-between items-center">
         <h1 class="text-xl font-semibold">My Dataset App</h1>
         <nav>
             <ul class="flex space-x-4">
-                <li><a href="@Link.GetPathByName("Signup")" class="text-white hover:text-blue-300">Signup</a></li>
-                <li><a href="@Link.GetPathByName("Login")" class="text-white hover:text-blue-300">Login</a></li>
+                @if (isAuthenticated)
+                {
+                    <li><a href="/logout" class="text-white hover:text-blue-300">Logout</a><Logout /></li>
+                }
+                else
+                {
+                    <li><a href="/register" class="text-white hover:text-blue-300">Register</a></li>
+                    <li><a href="/login" class="text-white hover:text-blue-300">Login</a></li>
+                }
             </ul>
         </nav>
     </div>
