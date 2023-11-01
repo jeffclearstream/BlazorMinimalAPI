@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI;
 using System.ComponentModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Spark.Library.Auth;
+using BlazorMinimalApis.Auth;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,10 +33,10 @@ builder.Services.AddAuthentication(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.Cookie.SameSite = SameSiteMode.Lax;
-    //options.Events = new CookieAuthenticationEvents
-    //{
-    //    OnValidatePrincipal = (CookieValidatePrincipalContext context) => context.HttpContext.RequestServices.GetRequiredService().ValidateAsync(context)
-    //};
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnValidatePrincipal = (CookieValidatePrincipalContext context) => context.HttpContext.RequestServices.GetRequiredService<IAuthValidator>().ValidateAsync(context)
+    };
 });
 builder.Services.AddRazorComponents();
 builder.Services.AddHttpContextAccessor();
@@ -50,6 +53,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<IAuthValidator, AuthValidator>();
+builder.Services.AddScoped<AuthenticationStateProvider, SparkAuthenticationStateProvider>();
 
 var app = builder.Build();
 

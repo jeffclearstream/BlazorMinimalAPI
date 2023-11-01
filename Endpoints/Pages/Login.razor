@@ -25,9 +25,26 @@
     }
 }
 
-<h3>Login</h3>
-<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-    <InputText id="email" @bind-Value="loginModel.Email" placeholder="Email" />
-    <InputText type="password" @bind-Value="loginModel.Password" placeholder="Password" />
-    <button type="submit">Login</button>
-</EditForm>
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 class="text-2xl font-bold mb-8 text-center">Sign in to your account</h2>
+        <form @onsubmit="HandleLogin">
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+                <input type="email" id="email" @bind="loginModel.Email" placeholder="Email address" class="input input-bordered w-full mt-1">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" @bind="loginModel.Password" placeholder="Password" class="input input-bordered w-full mt-1">
+            </div>
+            <div class="flex items-center justify-between mb-4">
+                <label for="remember-me" class="cursor-pointer select-none">
+                    <input type="checkbox" id="remember-me" class="checkbox checkbox-primary">
+                    <span class="ml-2">Remember me</span>
+                </label>
+                <a href="#" class="text-indigo-600 hover:underline text-sm">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn btn-primary w-full">Sign In</button>
+        </form>
+    </div>
+</div>
