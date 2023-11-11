@@ -3,13 +3,11 @@ using BlazorMinimalApis.Pages.Auth;
 using BlazorMinimalApis.Pages.Data;
 using BlazorMinimalApis.Pages.Lib;
 using BlazorMinimalApis.Pages.Pages;
-using BlazorMinimalApis.Pages.Pages.Contacts;
 
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 using System.ComponentModel.DataAnnotations;
 

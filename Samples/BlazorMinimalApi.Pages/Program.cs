@@ -1,4 +1,5 @@
 using BlazorMinimalApis.Data;
+using BlazorMinimalApis.Endpoints.Pages;
 using BlazorMinimalApis.Lib.Session;
 using BlazorMinimalApis.Pages.Auth;
 using BlazorMinimalApis.Pages.Lib;
@@ -54,6 +55,7 @@ builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<RolesService>();
 builder.Services.AddScoped<IAuthValidator, AuthValidator>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<DatasetPageController>();
 
 var app = builder.Build();
 
