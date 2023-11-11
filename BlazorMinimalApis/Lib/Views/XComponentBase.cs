@@ -36,7 +36,15 @@ public class XComponentBase : IComponent
         {
             _hasPendingQueuedRender = false;
             _hasNeverRendered = false;
-            BuildRenderTree(builder);
+            try
+            {
+                BuildRenderTree(builder);
+            }
+            catch (Exception ex)
+            {
+
+                //throw;
+            }
         };
     }
 
