@@ -1,32 +1,24 @@
 using BlazorMinimalApis.Data;
 using BlazorMinimalApis.Lib.Session;
-using BlazorMinimalApis.Pages.Data;
-using BlazorMinimalApis.Pages.Identity;
+using BlazorMinimalApis.Pages.Auth;
 using BlazorMinimalApis.Pages.Lib;
 
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+
+using Spark.Library.Auth;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<UserAccessor>();
-builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider, SparkAuthenticationStateProvider>();
 
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
-    .AddIdentityCookies();
+builder.Services.AddAuthorization(builder.Configuration, new string[] { CustomRoles.Admin, CustomRoles.User });
+builder.Services.AddAuthentication<IAuthValidator>(builder.Configuration);
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
 builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 
 builder.Services.AddHttpContextAccessor();
@@ -38,10 +30,15 @@ builder.Services.AddSession(options => {
     options.IdleTimeout = TimeSpan.FromMinutes(1);
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//{
+//    options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnectionString"]);
+//});
+builder.Services.AddDbContextFactory<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnectionString"]);
 });
+
 builder.Services.AddAntiforgery();
 
 builder.Services.AddCors(options =>
@@ -53,6 +50,10 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
+builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<RolesService>();
+builder.Services.AddScoped<IAuthValidator, AuthValidator>();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 

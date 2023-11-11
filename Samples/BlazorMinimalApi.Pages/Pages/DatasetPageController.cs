@@ -1,9 +1,15 @@
 ﻿using BlazorMinimalApis.Lib.Routing;
+using BlazorMinimalApis.Pages.Auth;
+using BlazorMinimalApis.Pages.Data;
 using BlazorMinimalApis.Pages.Lib;
 using BlazorMinimalApis.Pages.Pages;
+using BlazorMinimalApis.Pages.Pages.Contacts;
 
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 using System.ComponentModel.DataAnnotations;
 
@@ -13,6 +19,18 @@ namespace BlazorMinimalApis.Endpoints.Pages
 {
     public class DatasetPageController : PageController, IRouteDefinition
     {
+        private readonly UsersService _usersService;
+        private readonly IConfiguration _configuration;
+        private readonly AuthService _cookieService;
+
+        public DatasetPageController(UsersService usersService,
+            IConfiguration configuration,
+            AuthService cookieService)
+        {
+            this._usersService = usersService;
+            this._configuration = configuration;
+            this._cookieService = cookieService;
+        }
         public IResult Edit(int id)
         {
             return Page<DatasetDetails>(id);
@@ -31,8 +49,51 @@ namespace BlazorMinimalApis.Endpoints.Pages
             app.MapPost("/register", RegisterUser).WithName("RegisterUser");
         }
 
-        private IResult RegisterUser([FromForm] RegisterForm form)
+        private async Task<IResult> RegisterUser(HttpContext context, [FromForm] RegisterForm form)
         {
+            var validation = Validate(form);
+            if (validation.HasErrors)
+            {
+                var model = new { Form = form };
+                return Page<Register>(model);
+            }
+            var existingUser = await _usersService.FindUserByEmailAsync(form.Email);
+
+            if (existingUser != null)
+            {
+                // show error somehow
+                //ModelState.AddModelError("EmailExists", "Email already in use by another account.");
+                //return Page();
+            }
+
+            var userForm = new User()
+            {
+                Name = form.Email,
+                Email = form.Email,
+                Password = _usersService.GetSha256Hash(form.Password),
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var newUser = await _usersService.CreateUserAsync(userForm);
+
+            // Broadcast user created event. Sends welcome email
+            //var userCreated = new UserCreated(newUser);
+            //await _dispatcher.Broadcast(userCreated);
+
+            var user = await _usersService.FindUserAsync(newUser.Email, newUser.Password);
+
+            var cookieExpirationDays = _configuration.GetValue("Spark:Auth:CookieExpirationDays", 5);
+            var cookieClaims = await _cookieService.CreateCookieClaims(user);
+
+            await context.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                cookieClaims,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    IssuedUtc = DateTimeOffset.UtcNow,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(cookieExpirationDays)
+                });
             return Redirect("/");
         }
 
