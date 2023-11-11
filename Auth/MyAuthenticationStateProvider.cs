@@ -55,6 +55,8 @@ namespace BlazorMinimalApis.Auth
             var user = await userManager.FindUserAsync(userId);
             return user is not null;
         }
+
+        
     }
 
 }

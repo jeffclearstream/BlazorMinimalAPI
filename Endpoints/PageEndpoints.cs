@@ -36,7 +36,9 @@ public static class PageEndpoints
             .WithName("Dataset.View");
 
         app.MapGet("/login", new DatasetHandler().Login);
+        app.MapGet("/signin", new DatasetHandler().SignIn).WithName("Signin");
+        app.MapGet("/register", new DatasetHandler().Register);
 
-		return app;
+        return app;
     }
 }
