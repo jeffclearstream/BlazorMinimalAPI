@@ -1,0 +1,23 @@
+﻿@using BlazorMinimalApis.Lib.Validation
+
+<CascadingValue Value="@PageState">
+    <DynamicComponent Type="ComponentType" Parameters="ComponentParameters" />
+</CascadingValue>
+
+@code {
+    [Parameter, EditorRequired] 
+    public Type ComponentType { get; set; }
+
+    [Parameter, EditorRequired]
+    public Dictionary<string, object?> ComponentParameters { get; set; }
+
+    [Parameter]
+    public List<ValidationError> Errors { get; set; } = new();
+
+    private PageState PageState { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        PageState.Errors = Errors;
+    }
+}
