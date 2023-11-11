@@ -5,7 +5,7 @@
 
 @code {
     [Parameter]
-    public InputModel RegisterModel { get; set; } = new();
+    public RegisterForm Form { get; set; } = new();
 
 }
 
@@ -15,18 +15,31 @@
         <form method="post" @action="@Link.GetPathByName("RegisterUser")">
             <div class="mb-4">
                 <label for="email-register" class="block text-sm font-medium text-gray-700">Email address</label>
-                <input type="email" id="email-register" @bind="RegisterModel.Email" placeholder="Email address" class="input input-bordered w-full mt-1">
+                <input type="email" id="email" name="email" value="@Form.Email" placeholder="Email address" class="input input-bordered w-full mt-1">
+                @if (HasError(() => Form.Email))
+                {
+                    <div style="color: red;">@Message</div>
+                }
             </div>
             <div class="mb-4">
                 <label for="password-register" class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password-register" @bind="RegisterModel.Password" placeholder="Password" class="input input-bordered w-full mt-1">
+                <input type="password" id="password" name="password" value="@Form.Password" placeholder="Password" class="input input-bordered w-full mt-1">
+                @if (HasError(() => Form.Password))
+                {
+                    <div style="color: red;">@Message</div>
+                }
             </div>
             <div class="mb-4">
                 <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-                <input type="password" id="confirm-password" @bind="RegisterModel.ConfirmPassword" placeholder="Confirm Password" class="input input-bordered w-full mt-1">
+                <input type="password" id="confirmpassword" name="confirmpassword" value="@Form.ConfirmPassword" placeholder="Confirm Password" class="input input-bordered w-full mt-1">
+                @if (HasError(() => Form.ConfirmPassword))
+                {
+                    <div style="color: red;">@Message</div>
+                }
             </div>
             <button type="submit" class="btn btn-primary w-full mb-4">Register</button>
-            <AntiforgeryToken/>
+            <AntiforgeryToken />
+
             <div class="text-center">
                 <span class="text-sm">Already have an account? </span>
                 <a href="/login" class="text-indigo-600 hover:underline text-sm">Sign In</a>

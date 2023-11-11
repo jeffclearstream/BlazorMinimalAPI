@@ -31,14 +31,14 @@ namespace BlazorMinimalApis.Endpoints.Pages
             app.MapPost("/register", RegisterUser).WithName("RegisterUser");
         }
 
-        private IResult RegisterUser(HttpContext context, [FromForm] InputModel registerModel)
+        private IResult RegisterUser([FromForm] RegisterForm form)
         {
             return Redirect("/");
         }
 
         public IResult Register()
         { 
-            return Page<Register>(); 
+            return Page<Register>(new { Form = new RegisterForm { ConfirmPassword = "test", Email = "test@test.com", Password = "test" } }); 
         }
 
         public async Task<IResult> SignIn(SignInManager<IdentityUser> signInManager, [FromForm] LoginModelForm loginModel)
@@ -57,34 +57,15 @@ namespace BlazorMinimalApis.Endpoints.Pages
         }
     }
 
-    public class InputModel
+    public class RegisterForm
     {
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
         public string Email { get; set; } = null!;
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
         public string Password { get; set; } = null!;
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = null!;
     }
 
